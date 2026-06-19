@@ -1,7 +1,7 @@
 [project]
 name = "apple-music-chart-explorer"
 version = "0.1.0"
-description = "Add your description here"
+description = "let's have some fun this beat is sick"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
