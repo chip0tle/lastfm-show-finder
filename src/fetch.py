@@ -3,6 +3,7 @@ from requests.models import Response
 from requests.exceptions import HTTPError, Timeout, ConnectionError
 import requests
 
+
 def get_as_json(api_key: str | None, url: str) -> dict | Any:
     """
     Request data from API, return json object

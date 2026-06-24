@@ -9,7 +9,6 @@ dependencies = [
     "polars>=1.41.2",
     "python-dotenv>=1.2.2",
     "requests>=2.34.2",
-    "ruff>=0.15.18",
     "ty>=0.0.50",
 ]
 
