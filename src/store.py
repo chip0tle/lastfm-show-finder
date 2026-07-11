@@ -65,6 +65,20 @@ def write_json_to_tracks_db(conn: DuckDBPyConnection, json_data) -> None:
     )
 
 
+def date_check(conn: DuckDBPyConnection) -> bool:
+    """
+    Returns true if max(date_pulled) in tracks_flattened = today
+    """
+    latest_pull_date = conn.sql(
+        query="SELECT MAX(date_pulled) FROM tracks_flattened"
+    ).fetchall()
+    today_date = conn.sql(query="SELECT CAST((CURRENT_DATE) AS DATE)").fetchall()
+    # print(
+    #     f"Latest pull in tracks_flattened: {latest_pull_date} \nCurrent date: {today_date}"
+    # )
+    return latest_pull_date == today_date
+
+
 def cleanup_temp_tables(conn: DuckDBPyConnection) -> None:
     """
     Drop tables matching '%_temp' pattern
@@ -78,20 +92,6 @@ def cleanup_temp_tables(conn: DuckDBPyConnection) -> None:
         drop_query = f'DROP TABLE IF EXISTS "{table_name}" RESTRICT'
         conn.execute(query=drop_query)
         print(f"Dropped: {table_name}")
-
-
-def date_check(conn: DuckDBPyConnection) -> bool:
-    """
-    Returns true if max(date_pulled) in tracks_flattened = today
-    """
-    latest_pull_date = conn.sql(
-        query="SELECT MAX(date_pulled) FROM tracks_flattened"
-    ).fetchall()
-    today_date = conn.sql(query="SELECT CAST((CURRENT_DATE) AS DATE)").fetchall()
-    # print(
-    #     f"Latest pull in tracks_flattened: {latest_pull_date} \nCurrent date: {today_date}"
-    # )
-    return latest_pull_date == today_date
 
 
 def cleanup_hist_data(conn: DuckDBPyConnection) -> None:
