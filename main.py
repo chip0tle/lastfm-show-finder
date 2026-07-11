@@ -8,7 +8,7 @@ load_dotenv()
 
 LASTFM_KEY: str | None = os.getenv(key="LASTFM_API_KEY")
 LASTFM_CHART_URL: str = f"http://ws.audioscrobbler.com/2.0/?method=chart.gettoptracks&api_key={LASTFM_KEY}&format=json"
-LASTFM_TOPTRACKS_URL: str = f"http://ws.audioscrobbler.com/2.0/?method=geo.gettoptracks&country=us&api_key={LASTFM_KEY}&format=json"
+# LASTFM_TOPTRACKS_URL: str = f"http://ws.audioscrobbler.com/2.0/?method=geo.gettoptracks&country=us&api_key={LASTFM_KEY}&format=json"
 DATABASE_PATH: str = "data/db.duckdb"
 
 
