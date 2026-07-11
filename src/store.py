@@ -95,8 +95,19 @@ def cleanup_temp_tables(conn: DuckDBPyConnection) -> None:
 
 
 def cleanup_hist_data(conn: DuckDBPyConnection) -> None:
-    # TODO: cleanup should drop rows where date_pulled > 14 days ago
-    pass
+    """
+    Delete rows that are stale by more than 14 days.
+    """
+    conn.execute(
+        query="""
+        DELETE FROM tracks_flattened
+        WHERE date_pulled < CAST((CURRENT_DATE - INTERVAL 14 DAY) AS DATE)
+        """
+    )
+    cutoff_date = conn.sql(
+        query="SELECT CAST((CURRENT_DATE - INTERVAL 14 DAY) AS DATE)"
+    ).fetchall()
+    print(f"Dropped rows pulled before {cutoff_date[0][0]}")
 
 
 def cleanup_all(conn: DuckDBPyConnection) -> None:
