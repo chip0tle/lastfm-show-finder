@@ -28,7 +28,6 @@ def init_table(conn: DuckDBPyConnection) -> None:
     )
 
 
-# TODO: flatten & store (add position column)
 def write_json_to_tracks_db(conn: DuckDBPyConnection, json_data) -> None:
     """
     Flatten & store json-structured python dict into persistent duckdb.

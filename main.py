@@ -13,20 +13,26 @@ DATABASE_PATH: str = "data/db.duckdb"
 
 
 def main():
-    # Request chart data from Last.fm
-    chart_data = get_as_json(api_key=LASTFM_KEY, url=LASTFM_CHART_URL)
-    print(chart_data)
-    chart_tracklist = chart_data["tracks"]["track"]
-
     # Init database
     with duckdb.connect(database=DATABASE_PATH) as conn:
         # Init tracks_flattened if not exists
         init_table(conn)
-        # Flatten & store API data
-        write_json_to_tracks_db(conn, json_data=chart_tracklist)
+
+        # Check if tracks_flattened has data from today
+        latest_pull_date = conn.sql(
+            query="SELECT MAX(date_pulled) FROM tracks_flattened GROUP BY date_pulled"
+        ).fetchall()
+        today_date = conn.sql(query="SELECT CAST((CURRENT_DATE) AS DATE)").fetchall()
+        if not latest_pull_date == today_date:
+            # Request chart data from Last.fm
+            chart_data = get_as_json(api_key=LASTFM_KEY, url=LASTFM_CHART_URL)
+            chart_tracklist = chart_data["tracks"]["track"]
+            # Flatten & store API data
+            write_json_to_tracks_db(conn, json_data=chart_tracklist)
+
         # TODO: PoP update & position calcs logic
-        conn.sql(query="DESCRIBE tracks_temp").show()
-        conn.sql(query="DESCRIBE tracks_flattened").show()
+        # conn.sql(query="DESCRIBE tracks_temp").show()
+        # conn.sql(query="DESCRIBE tracks_flattened").show()
 
         # Drop any _temp tables, close db connection
         cleanup(conn)
