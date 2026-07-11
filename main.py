@@ -13,7 +13,6 @@ DATABASE_PATH: str = "data/db.duckdb"
 
 
 def main():
-    # Init database
     with duckdb.connect(database=DATABASE_PATH) as conn:
         # Init tracks_flattened if not exists
         init_table(conn)
@@ -32,9 +31,7 @@ def main():
             )
 
         # TODO: PoP update & position calcs logic
-        # conn.sql(query="DESCRIBE tracks_temp").show()
-        # conn.sql(query="DESCRIBE tracks_flattened").show()
-        # conn.sql(query="SELECT DISTINCT date_pulled FROM tracks_flattened").show()
+
         conn.sql(
             query="SELECT date_pulled, COUNT(*) FROM tracks_flattened GROUP BY date_pulled"
         ).show()

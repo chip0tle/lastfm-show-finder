@@ -88,9 +88,9 @@ def date_check(conn: DuckDBPyConnection) -> bool:
         query="SELECT MAX(date_pulled) FROM tracks_flattened"
     ).fetchall()
     today_date = conn.sql(query="SELECT CAST((CURRENT_DATE) AS DATE)").fetchall()
-    print(
-        f"Latest pull in tracks_flattened: {latest_pull_date} \nCurrent date: {today_date}"
-    )
+    # print(
+    #     f"Latest pull in tracks_flattened: {latest_pull_date} \nCurrent date: {today_date}"
+    # )
     return latest_pull_date == today_date
 
 
