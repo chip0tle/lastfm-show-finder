@@ -1,7 +1,7 @@
 import os
 import duckdb
 from src.fetch import get_as_json
-from src.store import init_table, write_json_to_tracks_db, cleanup
+from src.store import init_table, write_json_to_tracks_db, cleanup_all
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -35,7 +35,7 @@ def main():
         # conn.sql(query="DESCRIBE tracks_flattened").show()
 
         # Drop any _temp tables, close db connection
-        cleanup(conn)
+        cleanup_all(conn)
         conn.close()
 
 

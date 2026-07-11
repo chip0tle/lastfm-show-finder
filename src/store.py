@@ -65,9 +65,9 @@ def write_json_to_tracks_db(conn: DuckDBPyConnection, json_data) -> None:
     )
 
 
-def cleanup(conn: DuckDBPyConnection):
+def cleanup_temp_tables(conn: DuckDBPyConnection) -> None:
     """
-    Drop duckdb tables matching '%_temp' pattern
+    Drop tables matching '%_temp' pattern
     """
     pattern: str = "%_temp"
     tables_to_drop = conn.execute(
@@ -78,6 +78,17 @@ def cleanup(conn: DuckDBPyConnection):
         drop_query = f'DROP TABLE IF EXISTS "{table_name}" RESTRICT'
         conn.execute(query=drop_query)
         print(f"Dropped: {table_name}")
+
+
+def cleanup_hist_data(conn: DuckDBPyConnection) -> None:
+    # TODO: cleanup should drop rows where date_pulled > 14 days ago
+    pass
+
+
+def cleanup_all(conn: DuckDBPyConnection) -> None:
+    cleanup_hist_data(conn)
+    cleanup_temp_tables(conn)
+    print("DB cleanup completed!")
 
 
 # TODO: temp table & view(?) logic for PoP updates
