@@ -4,6 +4,7 @@ from requests.exceptions import HTTPError, Timeout, ConnectionError
 import requests
 
 
+# TODO: add progressive backoff
 def get_as_json(api_key: str | None, url: str) -> dict | Any:
     """
     Request data from API, return json object
