@@ -1,7 +1,7 @@
 import os
 import duckdb
 from src.fetch import get_as_json
-from src.store import init_table, write_json_to_tracks_db, cleanup_all
+from src.store import init_table, write_json_to_tracks_db, date_check, cleanup_all
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -19,20 +19,25 @@ def main():
         init_table(conn)
 
         # Check if tracks_flattened has data from today
-        latest_pull_date = conn.sql(
-            query="SELECT MAX(date_pulled) FROM tracks_flattened GROUP BY date_pulled"
-        ).fetchall()
-        today_date = conn.sql(query="SELECT CAST((CURRENT_DATE) AS DATE)").fetchall()
-        if not latest_pull_date == today_date:
+        if not date_check(conn):
+            print("Updating tracks_flattened with data from today...")
             # Request chart data from Last.fm
             chart_data = get_as_json(api_key=LASTFM_KEY, url=LASTFM_CHART_URL)
             chart_tracklist = chart_data["tracks"]["track"]
             # Flatten & store API data
             write_json_to_tracks_db(conn, json_data=chart_tracklist)
+        else:
+            print(
+                "Table tracks_flattened already has data from today. Skipping API request..."
+            )
 
         # TODO: PoP update & position calcs logic
         # conn.sql(query="DESCRIBE tracks_temp").show()
         # conn.sql(query="DESCRIBE tracks_flattened").show()
+        # conn.sql(query="SELECT DISTINCT date_pulled FROM tracks_flattened").show()
+        conn.sql(
+            query="SELECT date_pulled, COUNT(*) FROM tracks_flattened GROUP BY date_pulled"
+        ).show()
 
         # Drop any _temp tables, close db connection
         cleanup_all(conn)
