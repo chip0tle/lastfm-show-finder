@@ -32,9 +32,9 @@ def main():
 
         # TODO: PoP update & position calcs logic
 
-        conn.sql(
-            query="SELECT date_pulled, COUNT(*) FROM tracks_flattened GROUP BY date_pulled"
-        ).show()
+        # conn.sql(
+        #     query="SELECT date_pulled, COUNT(*) FROM tracks_flattened GROUP BY date_pulled"
+        # ).show()
 
         # Drop any _temp tables, close db connection
         cleanup_all(conn)

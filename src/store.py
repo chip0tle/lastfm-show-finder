@@ -67,7 +67,7 @@ def write_json_to_tracks_db(conn: DuckDBPyConnection, json_data) -> None:
 
 def date_check(conn: DuckDBPyConnection) -> bool:
     """
-    Returns true if max(date_pulled) in tracks_flattened = today
+    Returns true if max(date_pulled) in tracks_flattened = today.
     """
     latest_pull_date = conn.sql(
         query="SELECT MAX(date_pulled) FROM tracks_flattened"
@@ -81,7 +81,7 @@ def date_check(conn: DuckDBPyConnection) -> bool:
 
 def cleanup_temp_tables(conn: DuckDBPyConnection) -> None:
     """
-    Drop tables matching '%_temp' pattern
+    Drop tables matching '%_temp' pattern.
     """
     pattern: str = "%_temp"
     tables_to_drop = conn.execute(
@@ -91,7 +91,7 @@ def cleanup_temp_tables(conn: DuckDBPyConnection) -> None:
     for (table_name,) in tables_to_drop:
         drop_query = f'DROP TABLE IF EXISTS "{table_name}" RESTRICT'
         conn.execute(query=drop_query)
-        print(f"Dropped: {table_name}")
+        print(f"Dropped temp table: {table_name}")
 
 
 def cleanup_hist_data(conn: DuckDBPyConnection) -> None:
